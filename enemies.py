@@ -12,18 +12,28 @@ def generate_random_enemy():
     enemy = RandomEnemyType()
     return enemy
 
-
-def generate_dragon_list(enemy_number):
+def generate_enemy_list(enemy_number):
     enemy_list = [generate_random_enemy() for i in range(enemy_number)]
     return enemy_list
 
 
 class Dragon(Enemy):
+    _species = 'Дракон'
     def set_answer(self, answer):
         self.__answer = answer
 
     def check_answer(self, answer):
         return answer == self.__answer
+
+class Troll(Enemy):
+    _species = 'Тролль'
+    def set_answer(self, answer):
+        self.__answer = answer
+
+    def check_answer(self, answer):
+        return answer == self.__answer
+
+
 
 
 class GreenDragon(Dragon):
@@ -36,7 +46,7 @@ class GreenDragon(Dragon):
         x = randint(1,100)
         y = randint(1,100)
         self.__quest = str(x) + '+' + str(y)
-        self.set_answer(x + y)
+        self.set_answer(str(x + y))
         return self.__quest
 
 class RedDragon(Dragon):
@@ -49,7 +59,7 @@ class RedDragon(Dragon):
         x = randint(1, 100)
         y = randint(1, 100)
         self.__quest = str(x) + '-' + str(y)
-        self.set_answer(x - y)
+        self.set_answer(str(x - y))
         return self.__quest
 
 class BlackDragon(Dragon):
@@ -59,26 +69,80 @@ class BlackDragon(Dragon):
         self._color = 'черный'
 
     def question(self):
-        x = randint(1, 100)
-        y = randint(1, 100)
+        x = randint(1, 10)
+        y = randint(1, 10)
         self.__quest = str(x) + '*' + str(y)
-        self.set_answer(x * y)
+        self.set_answer(str(x * y))
         return self.__quest
 
-class Troll(Dragon):
+class FirstTroll(Troll):
+    def __init__(self):
+        self._health = 15
+        self._attack = 10
+        self._color = 'оранжевый'
+
+    def question(self):
+        x = randint(1, 3)
+        self.__quest = 'Угадайте число от 1 до 3'
+        self.set_answer(str(x))
+        return self.__quest
+
+class SimpleTroll(Troll):
     def __init__(self):
         self._health = 100
         self._attack = 25
-        self._color = 'черный'
+        self._color = 'малиновый'
 
     def question(self):
-        x = randint(1, 5)
-        self.__quest = 'Угадайте число от 1 до 5'
-        self.set_answer(x)
+        x = randint(1, 200)
+        self.__quest = 'Число ' + str(x) + ' простое? (0 или 1)'
+
+        def isprime(x):
+            if x == 1:
+                return '0'
+            for i in range(2, x // 2):
+                if x % i == 0:
+                    return '0'
+
+            return '1'
+
+        self.set_answer(isprime(x))
         return self.__quest
+
+class TrollTroll(Troll):
+    def __init__(self):
+        self._health = 100
+        self._attack = 25
+        self._color = 'утиный'
+
+
+
+    def question(self):
+        x = randint(3, 30)
+
+        def func(n):
+            Ans = []
+            d = 2
+            while d * d <= n:
+                if n % d == 0:
+                    Ans.append(str(d))
+                    n //= d
+                else:
+                    d += 1
+            if n > 1:
+                Ans.append(str(n))
+            return Ans
+
+
+        self.__quest = 'Разложите число ' + str(x) + ' на множители и перечислите их через запятую'
+        self.set_answer(','.join(func(x)))
+        return self.__quest
+
+
+
 
         #FIXME здесь также должны быть описаны классы RedDragon и BlackDragon
 # красный дракон учит вычитанию, а чёрный -- умножению.
 
 
-enemy_types = [GreenDragon, RedDragon, BlackDragon, Troll]
+enemy_types = [GreenDragon, RedDragon, BlackDragon, FirstTroll, SimpleTroll, TrollTroll]
